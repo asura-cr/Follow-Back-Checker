@@ -12,11 +12,25 @@
     const userId= document.cookie.match(/ds_user_id=(\d+)/)[1];
     console.log("Your id is" + userId);
 
-    const res = await fetch(`api/v1/friendships/18342191586/following/?count=100`, {
-        credentials: 'include',
-        headers: {'x-ig-app-id': '936619743392459'}
-    });
+    const following=[];
+    let maxId = '';
 
-    const data = await res.json();
-    console.log(data);
+    while (true) {
+        const url = `api/v1/friendships/${userId}/following/?count=50` + (maxId ? `&max_id=${maxId}`: '');
+        const res = await fetch(url, {
+            credentials: 'include',
+            headers: {'x-ig-app-id': '936619743392459'}
+        });
+
+        const data = await res.json();
+        following.push(...data.users);
+        console.log('got so far:', following.length);
+    
+        if (!data.next_max_id) break;
+        maxId= data.next_max_id;
+        await sleep(1500);
+        }
+
+    console.log('total following: ',following.length);
+    console.log(following);
 })();

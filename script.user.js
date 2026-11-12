@@ -37,13 +37,15 @@
     }
 
     const following = await fetchList('following');
-    console.log('Total following: ',following.length)
+    console.log('Total following: ', following.length)
 
     const followers = await fetchList('followers');
-    console.log('Total Followers: ',followers.length)
+    console.log('Total Followers: ', followers.length)
 
-    const followerIds= new Set(followers.map((u) => u.pk));
-    const notFollowingBack= following.filter((u) => !followerIds.has(u.pk));
+    const followerIds = new Set(followers.map((u) => u.pk));
+    const notFollowingBack = following.filter((u) => !followerIds.has(u.pk));
+    const verified = notFollowingBack.filter((u) => u.is_verified);
+    const normal = notFollowingBack.filter((u) => !u.is_verified);
 
     console.log("Not Following Back: ", notFollowingBack.length)
     console.log(notFollowingBack.map((u) => u.username))
@@ -64,17 +66,28 @@
     `;
 
     const title = document.createElement('div');
-    title.textContent = "Traitors (Not following back)" + notFollowingBack.length;
+    title.textContent = "Traitors (Not following back) " + notFollowingBack.length;
     panel.appendChild(title)
 
-    for (const user of notFollowingBack) {
-        const link=document.createElement('a');
-        link.href=`https://www.instagram.com/${user.username}/`;
-        link.target = '_blank';
-        link.textContent = user.username;
-        link.style.cssText = 'display:block; color: blue; padding: 4px 0';
-        panel.appendChild(link)
-    }
+    function addSection(heading, users) {
+        const h = document.createElement('div');
+        h.textContent = heading + ' (' + users.length + ')';
+        h.style.cssText = 'font-weight: bold; margin:12px 0px 4px; color: #aaa';
+        panel.appendChild(h);
+
+        for (const user of users) {
+            const link = document.createElement('a');
+            link.href = `https://www.instagram.com/${user.username}/`
+            link.target= '_blank'
+            link.textContent = user.username;
+            link.style.cssText = 'display:block; color:#4da3ff; padding: 4px 0;';
+            panel.appendChild(link);
+        }
+
+    };
+
+    addSection('Verified / celebs', verified);
+    addSection('Regular accounts',normal);
 
     document.body.appendChild(panel);
 

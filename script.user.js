@@ -72,12 +72,24 @@
         results.appendChild(h);
 
         for (const user of users) {
-            const link = document.createElement('a');
-            link.href = `https://www.instagram.com/${user.username}/`
-            link.target= '_blank'
-            link.textContent = user.username;
-            link.style.cssText = 'display:block; color:#4da3ff; padding: 4px 0;';
-            results.appendChild(link);
+            const row = document.createElement('a');
+            row.href = `https://www.instagram.com/${user.username}/`
+            row.target= '_blank'
+            row.style.cssText = 'display:flex; align-items:center; gap:10px; padding: 6px 4px; border-radius:8px; color:white; text-decoration:none;';
+
+            const pic = document.createElement('img');
+            pic.src = user.profile_pic_url;
+            pic.referrerPolicy='no-referrer';
+            pic.style.cssText='width:32px; height:32px; border-radius:50%; object-fit:cover;';
+
+            const name = document.createElement('span');
+            name.textContent= user.username + (user.is_verified ? '✓' : '')
+
+            row.onmouseenter= () => (row.style.background='#222');
+            row.onmouseleave = () => (row.style.background = 'transparent')
+
+            row.append(pic,name);
+            results.appendChild(row);
         }
 
     };

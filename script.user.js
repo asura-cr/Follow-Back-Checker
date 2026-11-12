@@ -5,7 +5,9 @@
 // @author       asura-cr
 // @match        https://www.instagram.com/*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
-// @grant        none   
+// @grant        GM_xmlhttpRequest
+// @connect      fbcdn.net
+// @connect      cdninstagram.com
 // ==/UserScript==
 
 (async () => {
@@ -36,13 +38,24 @@
         return um;
     }
 
+    function loadPic(img,url) {
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url:url,
+            responseType: 'blob',
+            onload: (res) => {
+                img.src=URL.createObjectURL(res.response);
+            }
+        });
+    }
+
     const panel = document.createElement('div');
     panel.style.cssText = `
     position:fixed; 
     right: 16px;
     bottom: 16px;
     z-index: 99999999999999999999999999999999999999999999999999999999999999999;
-    width: 280px;
+    width: 320px;
     max-height: 60vh;
     overflow: auto;
     background: black;
@@ -78,8 +91,7 @@
             row.style.cssText = 'display:flex; align-items:center; gap:10px; padding: 6px 4px; border-radius:8px; color:white; text-decoration:none;';
 
             const pic = document.createElement('img');
-            pic.src = user.profile_pic_url;
-            pic.referrerPolicy='no-referrer';
+            loadPic(pic,user.profile_pic_url);
             pic.style.cssText='width:32px; height:32px; border-radius:50%; object-fit:cover;';
 
             const name = document.createElement('span');

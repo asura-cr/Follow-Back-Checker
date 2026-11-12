@@ -1,6 +1,6 @@
 # Follow Back Checker
 
-- A feature instgram shld have in the app itself, a user to check your follwoing and followers and shows who isnt following back
+- A feature instgram shld have in the app itself, a userscript to check your follwoing and followers and shows who isnt following back
   - it checks b/w verified and not verified too
   - clicking on one , opens it in a new tab
 

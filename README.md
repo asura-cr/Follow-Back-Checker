@@ -8,6 +8,12 @@
 
     ![alt text](image.png)
 
+> [!IMPORTANT]
+> The first time you scan, allow Tampermonkey to connect to `fbcdn.net`, otherwise profile pictures won't load.
+
+> [!WARNING]
+> This uses Instagram's unofficial endpoints and can break anytime. Automating Instagram can go against its terms, so use it at your own risk.
+
 ## Install
 
 - 1. Install Tampermonkey/VioletMonkey browser extension 
@@ -39,8 +45,3 @@
 2. Click on scan button in a panel in bottom right and wait
 3. Click on any name to open profile in new tab
 
-> [!IMPORTANT]
-> The first time you scan, allow Tampermonkey to connect to `fbcdn.net`, otherwise profile pictures won't load.
-
-> [!WARNING]
-> This uses Instagram's unofficial endpoints and can break anytime. Automating Instagram can go against its terms, so use it at your own risk.

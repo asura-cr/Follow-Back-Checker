@@ -14,7 +14,7 @@
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 
-    async function fetchlist(type) {
+    async function fetchList(type) {
         const um = [];
         let maxId = '';
 
@@ -27,15 +27,29 @@
 
             const data = await res.json();
             um.push(...data.users);
-            console.log('got ${type} so far:', um.length);
+            console.log(`got ${type} so far:`, um.length);
 
             if (!data.next_max_id) break;
             maxId = data.next_max_id;
             await sleep(1500);
         }
-
-        console.log('total following: ', following.length);
-        console.log(following);
+        return um;
     }
 
-})();
+    const following = await fetchList('following');
+    console.log('Total following: ',following.length)
+
+    const followers = await fetchList('followers');
+    console.log('Total Followers: ',followers.length)
+
+    const followerIds= new Set(followers.map((u) => u.pk));
+    const notFollowingBack= following.filter((u) => !followerIds.has(u.pk));
+
+    console.log("Not Following Back: ", notFollowingBack.length)
+    console.log(notFollowingBack.map((u) => u.username))
+
+
+
+})(
+
+);

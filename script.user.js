@@ -48,6 +48,36 @@
     console.log("Not Following Back: ", notFollowingBack.length)
     console.log(notFollowingBack.map((u) => u.username))
 
+    const panel = document.createElement('div');
+    panel.style.cssText = `
+    position:fixed; 
+    right: 16px;
+    bottom: 16px;
+    z-index: 99999999999999999999999999999999999999999999999999999999999999999;
+    width: 280px;
+    max-height: 60vh;
+    overflow: auto;
+    background: black;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    `;
+
+    const title = document.createElement('div');
+    title.textContent = "Traitors (Not following back)" + notFollowingBack.length;
+    panel.appendChild(title)
+
+    for (const user of notFollowingBack) {
+        const link=document.createElement('a');
+        link.href=`https://www.instagram.com/${user.username}/`;
+        link.target = '_blank';
+        link.textContent = user.username;
+        link.style.cssText = 'display:block; color: blue; padding: 4px 0';
+        panel.appendChild(link)
+    }
+
+    document.body.appendChild(panel);
+
 
 
 })(

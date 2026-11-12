@@ -36,20 +36,6 @@
         return um;
     }
 
-    const following = await fetchList('following');
-    console.log('Total following: ', following.length)
-
-    const followers = await fetchList('followers');
-    console.log('Total Followers: ', followers.length)
-
-    const followerIds = new Set(followers.map((u) => u.pk));
-    const notFollowingBack = following.filter((u) => !followerIds.has(u.pk));
-    const verified = notFollowingBack.filter((u) => u.is_verified);
-    const normal = notFollowingBack.filter((u) => !u.is_verified);
-
-    console.log("Not Following Back: ", notFollowingBack.length)
-    console.log(notFollowingBack.map((u) => u.username))
-
     const panel = document.createElement('div');
     panel.style.cssText = `
     position:fixed; 
@@ -65,15 +51,25 @@
     border-radius: 10px;
     `;
 
-    const title = document.createElement('div');
-    title.textContent = "Traitors (Not following back) " + notFollowingBack.length;
-    panel.appendChild(title)
+    const scanBtn = document.createElement('button');
+    scanBtn.textContent= 'Scan';
+    scanBtn.style.cssText = 'background:#0095f6; color:white; border:0; border-radius:6px; padding:6px 12px; cursor:pointer;'
+
+    const status = document.createElement('div');
+    status.textContent='Press Scan to start';
+    status.style.cssText = 'color:#aaa; margin:8px 0;';
+
+    const results = document.createElement('div');
+
+    panel.append(scanBtn,status,results);
+    document.body.appendChild(panel);
+
 
     function addSection(heading, users) {
         const h = document.createElement('div');
         h.textContent = heading + ' (' + users.length + ')';
         h.style.cssText = 'font-weight: bold; margin:12px 0px 4px; color: #aaa';
-        panel.appendChild(h);
+        results.appendChild(h);
 
         for (const user of users) {
             const link = document.createElement('a');
@@ -81,18 +77,40 @@
             link.target= '_blank'
             link.textContent = user.username;
             link.style.cssText = 'display:block; color:#4da3ff; padding: 4px 0;';
-            panel.appendChild(link);
+            results.appendChild(link);
         }
 
     };
+    
+    async function scan() {
+        scanBtn.disabled = true;
+        results.innerHTML = '';
 
-    addSection('Verified / celebs', verified);
-    addSection('Regular accounts',normal);
+        status.textContent='Fetching following...';
+        const following = await fetchList('following');
+        console.log('Total following: ', following.length)
 
-    document.body.appendChild(panel);
+        status.textContent='Fetching followers...'
+        const followers = await fetchList('followers');
+        console.log('Total Followers: ', followers.length)
+
+        const followerIds = new Set(followers.map((u) => u.pk));
+        const notFollowingBack = following.filter((u) => !followerIds.has(u.pk));
+        const verified = notFollowingBack.filter((u) => u.is_verified);
+        const normal = notFollowingBack.filter((u) => !u.is_verified);
+
+        console.log("Not Following Back: ", notFollowingBack.length)
+        console.log(notFollowingBack.map((u) => u.username))
+
+        addSection('Verified / celebs', verified);
+        addSection('Regular accounts',normal);
+
+        status.textContent = 'Traitors (Not following back): ' + notFollowingBack.length
+        scanBtn.disabled=false;
+        }
+
+    scanBtn.onclick=scan;
 
 
 
-})(
-
-);
+})();

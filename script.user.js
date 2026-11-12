@@ -95,7 +95,7 @@
             pic.style.cssText='width:32px; height:32px; border-radius:50%; object-fit:cover;';
 
             const name = document.createElement('span');
-            name.textContent= user.username + (user.is_verified ? '✓' : '')
+            name.textContent= user.username + (user.is_verified ? ' ✓' : '')
 
             row.onmouseenter= () => (row.style.background='#222');
             row.onmouseleave = () => (row.style.background = 'transparent')
